@@ -14,7 +14,7 @@ addEventListener('DOMContentLoaded', () => {
   directorSpan = document.querySelector('span#director');
   release_dateSpan = document.querySelector('span#release_date');
 //   homeworldSpan = document.querySelector('span#homeworld');
-  filmsUl = document.querySelector('#films>ul');
+  filmsUl = document.querySelector('#homeworld');
 //   filmID = document.querySelector('');
   const sp = new URLSearchParams(window.location.search)
   const id = sp.get('id')
@@ -76,12 +76,22 @@ async function fetchFilm(id) {
   }
   
 
-async function fetchFilms(character) {
-  const url = `${baseUrl}/characters/${character?.id}/films`;
-  const films = await fetch(url)
-    .then(res => res.json())
-  return films;
-}
+// async function fetchFilms(character) {
+//   const url = `${baseUrl}/characters/${character?.id}/films`;
+//   const films = await fetch(url)
+//     .then(res => res.json())
+//   return films;
+// }
+
+async function fetchCharacters(film) {
+    
+    const url = `${baseUrl}/films/${film?.id}/characters`;
+    const characters = await fetch(url)
+      .then(res => res.json())
+      console.log({characters})
+      return characters;
+    
+  }
 
 const renderFilm = film => {
   document.title = `SWAPI - ${film?.title}`;  // Just to make the browser tab say their name
@@ -89,7 +99,7 @@ const renderFilm = film => {
   release_dateSpan.textContent = film?.release_date;
   directorSpan.textContent = film?.director;
   episodeSpan.textContent = film?.episode_id;
-  homeworldSpan.innerHTML = `<a href="/planet.html?id=${character?.homeworld.id}">${character?.homeworld.name}</a>`;
-  const filmsLis = character?.films?.map(film => `<li><a href="/film.html?id=${film.id}">${film.title}</li>`)
-  filmsUl.innerHTML = filmsLis.join("");
+//   homeworldSpan.innerHTML = `<a href="/planet.html?id=${character?.homeworld.id}">${character?.homeworld.name}</a>`;   
+  const charactersList = film?.characters?.map(character => `<li><a href="/film.html?id=${character.id}">${character.name}</li>`)
+  filmsUl.innerHTML = charactersList.join("");
 }

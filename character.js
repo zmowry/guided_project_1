@@ -4,6 +4,7 @@ let heightSpan;
 let massSpan;
 let filmsDiv;
 let planetDiv;
+
 const baseUrl = `https://swapi2.azurewebsites.net/api`;
 
 // Runs on page load
@@ -14,6 +15,7 @@ addEventListener('DOMContentLoaded', () => {
   heightSpan = document.querySelector('span#height');
   homeworldSpan = document.querySelector('span#homeworld');
   filmsUl = document.querySelector('#films>ul');
+  filmID = docuemt.querySelector('');
   const sp = new URLSearchParams(window.location.search)
   const id = sp.get('id')
   getCharacter(id)

@@ -10,15 +10,15 @@ const baseUrl = `https://swapi2.azurewebsites.net/api`;
 // Runs on page load
 addEventListener('DOMContentLoaded', () => {
   nameH1 = document.querySelector('h1#name');
-  birthYearSpan = document.querySelector('span#birth_year');
-  massSpan = document.querySelector('span#mass');
-  heightSpan = document.querySelector('span#height');
-  homeworldSpan = document.querySelector('span#homeworld');
+  episodeSpan = document.querySelector('span#episode');
+  directorSpan = document.querySelector('span#director');
+  release_dateSpan = document.querySelector('span#release_date');
+//   homeworldSpan = document.querySelector('span#homeworld');
   filmsUl = document.querySelector('#films>ul');
-  filmID = docuemt.querySelector('');
+//   filmID = document.querySelector('');
   const sp = new URLSearchParams(window.location.search)
   const id = sp.get('id')
-  getCharacter(id)
+//   getCharacter(id)
   getFilm(id)
 });
 
@@ -26,6 +26,7 @@ async function getFilm(id) {
     let film;
     try {
         film = await fetchFilm(id)
+        console.log({film})
     //   film = await fetchFilm(id)
     //   film.films = await fetchFilms(film)
 
@@ -53,6 +54,7 @@ async function getCharacter(id) {
   renderCharacter(character);
 
 }
+
 async function fetchCharacter(id) {
   let characterUrl = `${baseUrl}/characters/${id}`;
   return await fetch(characterUrl)
@@ -81,12 +83,12 @@ async function fetchFilms(character) {
   return films;
 }
 
-const renderCharacter = character => {
-  document.title = `SWAPI - ${character?.name}`;  // Just to make the browser tab say their name
-  nameH1.textContent = character?.name;
-  heightSpan.textContent = character?.height;
-  massSpan.textContent = character?.mass;
-  birthYearSpan.textContent = character?.birth_year;
+const renderFilm = film => {
+  document.title = `SWAPI - ${film?.title}`;  // Just to make the browser tab say their name
+  nameH1.textContent = film?.title;
+  release_dateSpan.textContent = film?.release_date;
+  directorSpan.textContent = film?.director;
+  episodeSpan.textContent = film?.episode_id;
   homeworldSpan.innerHTML = `<a href="/planet.html?id=${character?.homeworld.id}">${character?.homeworld.name}</a>`;
   const filmsLis = character?.films?.map(film => `<li><a href="/film.html?id=${film.id}">${film.title}</li>`)
   filmsUl.innerHTML = filmsLis.join("");

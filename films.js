@@ -13,23 +13,19 @@ addEventListener('DOMContentLoaded', () => {
   episodeSpan = document.querySelector('span#episode');
   directorSpan = document.querySelector('span#director');
   release_dateSpan = document.querySelector('span#release_date');
-//   homeworldSpan = document.querySelector('span#homeworld');
-  filmsUl = document.querySelector('#homeworld');
-//   filmID = document.querySelector('');
+  filmsUl = document.querySelector('#characters>ul');
+  planetsUl = document.querySelector('#planets>ul')
   const sp = new URLSearchParams(window.location.search)
   const id = sp.get('id')
-//   getCharacter(id)
+  // getPlanet(id)
   getFilm(id)
 });
 
 async function getFilm(id) {
     let film;
     try {
-        film = await fetchFilm(id)
-        console.log({film})
-    //   film = await fetchFilm(id)
-    //   film.films = await fetchFilms(film)
-
+      film = await fetchFilm(id)
+      console.log({film})
       film.characters = await fetchCharacters(film)
       film.planets = await fetchPlanets(film)
 
@@ -41,28 +37,14 @@ async function getFilm(id) {
   
   }
 
-async function getCharacter(id) {
-  let character;
-  try {
-    character = await fetchCharacter(id)
-    character.homeworld = await fetchHomeworld(character)
-    character.films = await fetchFilms(character)
-  }
-  catch (ex) {
-    console.error(`Error reading character ${id} data.`, ex.message);
-  }
-  renderCharacter(character);
-
-}
-
 async function fetchCharacter(id) {
-  let characterUrl = `${baseUrl}/characters/${id}`;
+  let characterUrl = `${baseUrl}/character/${id}`;
   return await fetch(characterUrl)
     .then(res => res.json())
 }
 
-async function fetchHomeworld(character) {
-  const url = `${baseUrl}/planets/${character?.homeworld}`;
+async function fetchPlanet(id) {
+  const url = `${baseUrl}/planets/${id}`;
   const planet = await fetch(url)
     .then(res => res.json())
   return planet;
@@ -76,13 +58,6 @@ async function fetchFilm(id) {
   }
   
 
-// async function fetchFilms(character) {
-//   const url = `${baseUrl}/characters/${character?.id}/films`;
-//   const films = await fetch(url)
-//     .then(res => res.json())
-//   return films;
-// }
-
 async function fetchCharacters(film) {
     
     const url = `${baseUrl}/films/${film?.id}/characters`;
@@ -90,7 +65,15 @@ async function fetchCharacters(film) {
       .then(res => res.json())
       console.log({characters})
       return characters;
+  }
+
+  async function fetchPlanets(film) {
     
+    const url = `${baseUrl}/films/${film?.id}/planets`;
+    const planets = await fetch(url)
+      .then(res => res.json())
+      console.log({planets})
+      return planets;
   }
 
 const renderFilm = film => {
@@ -99,7 +82,10 @@ const renderFilm = film => {
   release_dateSpan.textContent = film?.release_date;
   directorSpan.textContent = film?.director;
   episodeSpan.textContent = film?.episode_id;
-//   homeworldSpan.innerHTML = `<a href="/planet.html?id=${character?.homeworld.id}">${character?.homeworld.name}</a>`;   
-  const charactersList = film?.characters?.map(character => `<li><a href="/film.html?id=${character.id}">${character.name}</li>`)
+  
+  const charactersList = film?.characters?.map(character => `<li><a href="/films.html?id=${character.id}">${character.name}</li>`)
   filmsUl.innerHTML = charactersList.join("");
+
+  const planetsList = film?.planets?.map(planet => `<li><a href="/films.html?id=${planet.id}">${planet.name}</li>`)
+  planetsUl.innerHTML = planetsList.join("");
 }
